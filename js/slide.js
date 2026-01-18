@@ -26,11 +26,11 @@ export class Slide {
   onStart(event) {
     let movetype;
 
-    if (event.type === "mousedown") {      
+    if (event.type === "mousedown") {
       movetype = "mousemove";
       event.preventDefault();
       this.dist.startX = event.clientX;
-    } else {      
+    } else {
       movetype = "touchmove";
       this.dist.startX = event.changedTouches[0].clientX;
     }
@@ -147,59 +147,64 @@ export class Slide {
     this.bindEvents();
     this.addSlideEvents();
     this.addResizeEvent();
-    this.changeSlide(2)
+    this.changeSlide(2);
     return this;
   }
 }
 
-export class SlideNav extends Slide {
-  constructor (slide, wrapper){
-    super (slide, wrapper);
+export default class SlideNav extends Slide {
+  constructor(slide, wrapper) {
+    super(slide, wrapper);
     this.bindControlEvents();
   }
-  addArrow(prev, next){
+  addArrow(prev, next) {
     this.prevElement = document.querySelector(prev);
     this.nextElement = document.querySelector(next);
     this.addArrowEvent();
   }
 
-  addArrowEvent(){
+  addArrowEvent() {
     this.prevElement.addEventListener("click", this.activePrevSlide);
     this.nextElement.addEventListener("click", this.activeNextSlide);
   }
 
-  createControl(){
-    const control = document.createElement('ul');
+  createControl() {
+    const control = document.createElement("ul");
     control.dataset.control = "slide";
     this.slideArray.forEach((item, index) => {
-      control.innerHTML += `<li><a href="#slide${index + 1}">${index + 1}</a></li>`;
+      control.innerHTML += `<li><a href="#slide${index + 1}">${
+        index + 1
+      }</a></li>`;
     });
     this.wrapper.appendChild(control);
-    return control;    
+    return control;
   }
 
-  eventControl (item, index){
+  eventControl(item, index) {
     item.addEventListener("click", (event) => {
       event.preventDefault();
-      this.changeSlide(index);      
+      this.changeSlide(index);
     });
     this.wrapper.addEventListener("changeEvent", this.activeControlItem);
   }
 
-  activeControlItem(){
-    this.controlArray.forEach(item => item.classList.remove(this.activeClass));
+  activeControlItem() {
+    this.controlArray.forEach((item) =>
+      item.classList.remove(this.activeClass)
+    );
     this.controlArray[this.index.active].classList.add(this.activeClass);
   }
 
-  addControl(customControl){
-    this.control = document.querySelector(customControl) || this.createControl();    
+  addControl(customControl) {
+    this.control =
+      document.querySelector(customControl) || this.createControl();
     this.controlArray = [...this.control.children];
-    this.controlArray.forEach(this.eventControl);    
+    this.controlArray.forEach(this.eventControl);
 
     this.activeControlItem();
   }
 
-  bindControlEvents(){
+  bindControlEvents() {
     this.eventControl = this.eventControl.bind(this);
     this.activeControlItem = this.activeControlItem.bind(this);
   }
